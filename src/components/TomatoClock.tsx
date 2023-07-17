@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { solveTime } from '../utils/utils'
+import { solveTime, solveStateInComponent, checkIsWork } from '../utils/utils'
 
-const { onCommands } = window.electron
+const { onCommands, RequestMenu } = window.electron
 
 export default function TomatoClock({ workDelay, restDelay }: { workDelay: number; restDelay: number }) {
-  const [delay, setDelay] = useState(workDelay)
-  const [state, setState] = useState<'work' | 'rest'>('work')
+  const [delay, setDelay] = useState(0)
+  const [state, setState] = useState<ClockState>('uninit')
 
   const timeRef = useRef<NodeJS.Timer | null>(null)
 
@@ -13,19 +13,16 @@ export default function TomatoClock({ workDelay, restDelay }: { workDelay: numbe
     onCommands((_event: any, value: any) => {
       if (value === 'reset') {
         clearInterval(timeRef.current!)
-        timeRef.current = setInterval(() => {
-          setDelay((v) => v - 1)
-        }, 1000)
-        setDelay(workDelay)
-        setState('work')
+        setDelay(0)
+        setState('uninit')
       }
     })
   }, [workDelay])
 
   const toggle = useCallback(() => {
     if (!delay) {
-      setDelay(state === 'rest' ? workDelay : restDelay)
-      setState(state === 'rest' ? 'work' : 'rest')
+      setDelay(checkIsWork(state) ? restDelay : workDelay)
+      setState((v) => (checkIsWork(v) ? 'rest' : 'work'))
       timeRef.current = setInterval(() => {
         setDelay((v) => v - 1)
       }, 1000)
@@ -36,6 +33,10 @@ export default function TomatoClock({ workDelay, restDelay }: { workDelay: numbe
     timeRef.current = setInterval(() => {
       setDelay((v) => v - 1)
     }, 1000)
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+      RequestMenu()
+    })
     return () => {
       if (timeRef.current) {
         clearInterval(timeRef.current)
@@ -50,8 +51,8 @@ export default function TomatoClock({ workDelay, restDelay }: { workDelay: numbe
   }, [delay])
 
   return (
-    <div onClick={toggle} className={`${!delay && 'nodrag'} text-[24px] font-bold text-blue-300 w-[fit-content]  select-none cursor-pointer`}>
-      {state === 'work' ? '📑' : '💖'}
+    <div onClick={toggle} className={`nodrag text-[24px] font-bold text-blue-300 w-[fit-content]  select-none cursor-pointer`}>
+      {delay > 0 && solveStateInComponent(state)}
       {solveTime(delay, state)}
     </div>
   )

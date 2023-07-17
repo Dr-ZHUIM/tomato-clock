@@ -9,14 +9,15 @@ let tray = null
 app.whenReady().then(() => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 100,
-    height: 150,
-    x: 1200,
+    width: 130,
+    height: 50,
+    x: 1500,
     y: 100,
     transparent: true,
     hasShadow: true,
     frame: false,
     alwaysOnTop: true,
+    resizable: false,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       nodeIntegration: true
@@ -24,7 +25,6 @@ app.whenReady().then(() => {
   })
 
   mainWindow.setAspectRatio(1)
-  Menu.setApplicationMenu(context_menu)
   // and load the index.html of the app.
   if (mode === 'dev') {
     mainWindow.loadURL('http://localhost:8080/')
@@ -50,9 +50,18 @@ app.whenReady().then(() => {
       }
     }
   ])
+  Menu.setApplicationMenu(contextMenu)
   tray = new Tray(path.join(__dirname, '../public/icon.ico'))
+  tray.addListener('click', () => {
+    mainWindow.showInactive()
+  })
   tray.setToolTip('tomato-clock - MILLIERANNA is Watching')
   tray.setContextMenu(contextMenu)
+  ipcMain.on('menu-commands', (event, input) => {
+    if (input === 'request-menu') {
+      contextMenu.popup({ window: BrowserWindow.fromWebContents(event.sender) })
+    }
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

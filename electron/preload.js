@@ -12,6 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer,
-  onCommands: (callback) => ipcRenderer.on('menu-commands', callback)
+  onCommands: (callback) => ipcRenderer.on('menu-commands', callback),
+  RequestMenu: () => ipcRenderer.send('menu-commands', 'request-menu')
 })
