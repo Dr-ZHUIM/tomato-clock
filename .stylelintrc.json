@@ -1,0 +1,24 @@
+{
+  "customSyntax": "postcss-scss",
+    "extends": ["stylelint-config-recommended"],
+    "rules": {
+        "at-rule-no-unknown": [
+          true,
+          {
+            "ignoreAtRules": [
+              "tailwind",
+              "apply",
+              "variants",
+              "responsive",
+              "screen",
+              "layer"
+            ]
+          }
+        ],
+        "declaration-block-trailing-semicolon": null,
+        "no-descending-specificity": null,
+        "no-irregular-whitespace": null,
+        "no-invalid-position-at-import-rule": null,
+        "declaration-block-no-duplicate-custom-properties": null
+      }
+}
