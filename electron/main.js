@@ -6,6 +6,7 @@ const context_menu = require('./menu')
 const productURL = path.join(__dirname, '../build/index.html')
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 let tray = null
+
 app.whenReady().then(() => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -16,7 +17,6 @@ app.whenReady().then(() => {
     transparent: true,
     hasShadow: true,
     frame: false,
-    alwaysOnTop: true,
     resizable: false,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
@@ -32,14 +32,14 @@ app.whenReady().then(() => {
   } else {
     mainWindow.loadFile(productURL)
   }
-
   mainWindow.setSkipTaskbar(true)
-
+  mainWindow.setAlwaysOnTop(true, 'screen-saver')
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '重置',
       click: () => {
-        mainWindow.webContents.send('menu-commands', 'reset')
+        mainWindow.webContents.send('menu-commands', 'screen-saver')
       }
     },
     {

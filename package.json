@@ -7,7 +7,7 @@
   "proload": "./electron/preload.js",
   "name": "electron_model",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": ".",
   "scripts": {
     "start": "concurrently \"vite\" \"nodemon --exec electron . dev\"",
