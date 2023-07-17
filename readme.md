@@ -25,3 +25,9 @@ updates:
 fixed:
 
 1. app window cannot show on the topest layer correctly
+
+### v1.0.2
+
+fixed:
+
+1. clock cannot be resetted correctly

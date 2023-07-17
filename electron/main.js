@@ -39,7 +39,7 @@ app.whenReady().then(() => {
     {
       label: '重置',
       click: () => {
-        mainWindow.webContents.send('menu-commands', 'screen-saver')
+        mainWindow.webContents.send('menu-commands', 'reset')
       }
     },
     {
