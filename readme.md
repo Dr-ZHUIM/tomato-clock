@@ -26,7 +26,7 @@ fixed:
 
 1. app window cannot show on the topest layer correctly
 
-### v1.0.2
+### v1.0.3
 
 fixed:
 
